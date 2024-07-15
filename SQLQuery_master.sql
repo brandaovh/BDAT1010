@@ -329,47 +329,23 @@ FROM mov.Movie_Director
 WHERE Director_Age_in_Years < 45;
 
 -- 8a.Display all the Movies and their Actors information based on the relationship
-SELECT m.Movie_Name
-     , m.Movie_Released_Year
-     , m.Movie_Lead_Studio
-     , m.Movie_Language
-     , m.Movie_Category
-     , m.Movie_Duration_in_Min
-     , m.Movie_Worldwide_Earning_in_$M
-     , m.Movie_Type
-     , a.Actor_First_Name
-     , a.Actor_Last_Name
-     , a.Actor_Age_in_Years
-     , a.Actor_Location
+SELECT m.*
+     , a.*
 FROM mov.Movies          m
     JOIN mov.Movie_Actor a
         ON m.Movie_ID = a.Movie_ID;
 
 -- 8b. Display the Movies name and their Ratings.
 SELECT m.Movie_Name
-     , r.Rating_Audience_Score
-     , r.Rating_Rotten_Tomatoes
+     , r.*
 FROM mov.Movies           m
     JOIN mov.Movie_Rating r
         ON m.Movie_ID = r.Movie_ID;
 
 --8c.Display all the Movies, Actors, and Directors information based on the relationship.
-SELECT m.Movie_Name
-     , m.Movie_Released_Year
-     , m.Movie_Lead_Studio
-     , m.Movie_Language
-     , m.Movie_Category
-     , m.Movie_Duration_in_Min
-     , m.Movie_Worldwide_Earning_in_$M
-     , m.Movie_Type
-     , a.Actor_First_Name
-     , a.Actor_Last_Name
-     , a.Actor_Age_in_Years
-     , a.Actor_Location
-     , d.Director_First_Name
-     , d.Director_Last_Name
-     , d.Director_Age_in_Years
-     , d.Director_Gender
+SELECT m.*
+     , a.*
+     , d.*
 FROM mov.Movies             m
     JOIN mov.Movie_Actor    a
         ON m.Movie_ID = a.Movie_ID
@@ -377,24 +353,10 @@ FROM mov.Movies             m
         ON m.Director_ID = d.Director_ID;
 
 --8d. Display all the Movies, Actors, Directors, and Movie Rating information based on the relationship.
-SELECT m.Movie_Name
-     , m.Movie_Released_Year
-     , m.Movie_Lead_Studio
-     , m.Movie_Language
-     , m.Movie_Category
-     , m.Movie_Duration_in_Min
-     , m.Movie_Worldwide_Earning_in_$M
-     , m.Movie_Type
-     , a.Actor_First_Name
-     , a.Actor_Last_Name
-     , a.Actor_Age_in_Years
-     , a.Actor_Location
-     , d.Director_First_Name
-     , d.Director_Last_Name
-     , d.Director_Age_in_Years
-     , d.Director_Gender
-     , r.Rating_Audience_Score
-     , r.Rating_Rotten_Tomatoes
+SELECT m.*
+     , a.*
+     , d.*
+     , r.*
 FROM mov.Movies             m
     JOIN mov.Movie_Actor    a
         ON m.Movie_ID = a.Movie_ID
@@ -404,24 +366,10 @@ FROM mov.Movies             m
         ON m.Movie_ID = r.Movie_ID;
 
 --8e. Display all the Movies, Actors, Directors, and Movie Rating information whose Rating_Audience_Score is more than 80% based on the relationship.
-SELECT m.Movie_Name
-     , m.Movie_Released_Year
-     , m.Movie_Lead_Studio
-     , m.Movie_Language
-     , m.Movie_Category
-     , m.Movie_Duration_in_Min
-     , m.Movie_Worldwide_Earning_in_$M
-     , m.Movie_Type
-     , a.Actor_First_Name
-     , a.Actor_Last_Name
-     , a.Actor_Age_in_Years
-     , a.Actor_Location
-     , d.Director_First_Name
-     , d.Director_Last_Name
-     , d.Director_Age_in_Years
-     , d.Director_Gender
-     , r.Rating_Audience_Score
-     , r.Rating_Rotten_Tomatoes
+SELECT m.*
+     , a.*
+     , d.*
+     , r.*
 FROM mov.Movies             m
     JOIN mov.Movie_Actor    a
         ON m.Movie_ID = a.Movie_ID
@@ -429,7 +377,7 @@ FROM mov.Movies             m
         ON m.Director_ID = d.Director_ID
     JOIN mov.Movie_Rating   r
         ON m.Movie_ID = r.Movie_ID
-WHERE CAST(REPLACE(r.Rating_Audience_Score, '%', '') AS INT) > 80;
+WHERE R.Rating_Audience_Score > '80';
 
 -- 8f.	Display all the Movies information whose Rating_Rotten_Tomatoes is more than 90%.
 SELECT m.*
@@ -437,7 +385,7 @@ SELECT m.*
 FROM mov.Movies           m
     JOIN mov.Movie_Rating r
         ON m.Movie_ID = r.Movie_ID
-WHERE CAST(REPLACE(r.Rating_Rotten_Tomatoes, '%', '') AS INT) > 90;
+WHERE R.Rating_Rotten_Tomatoes > '90';
 
 -- 9.a: Create a new table MovieCopy and copy all records of the Movie table.
 SELECT *
@@ -556,14 +504,26 @@ GO
 -- 12.a: Create a view to display all the movie information.
 CREATE VIEW mov.vw_MovieInfo
 AS
-SELECT *
+SELECT Movie_ID
+     , Movie_Name
+     , Movie_Released_Year
+     , Movie_Lead_Studio
+     , Movie_Language
+     , Movie_Type
+     , Movie_Category
 FROM mov.Movies;
 GO
 
 -- 12.b: Create a view to display all the movies and their rating information.
 CREATE VIEW mov.vw_MovieRatingInfo
 AS
-SELECT m.*
+SELECT m.Movie_ID
+     , m.Movie_Name
+     , m.Movie_Released_Year
+     , m.Movie_Lead_Studio
+     , m.Movie_Language
+     , m.Movie_Type
+     , m.Movie_Category
      , r.Rating_Audience_Score
      , r.Rating_Rotten_Tomatoes
 FROM mov.Movies           m
@@ -574,7 +534,13 @@ GO
 -- 12.c: Create a view to display all the movies and their actor information.
 CREATE VIEW mov.vw_MovieActorInfo
 AS
-SELECT m.*
+SELECT m.Movie_ID
+     , m.Movie_Name
+     , m.Movie_Released_Year
+     , m.Movie_Lead_Studio
+     , m.Movie_Language
+     , m.Movie_Type
+     , m.Movie_Category
      , a.Actor_First_Name
      , a.Actor_Last_Name
      , a.Actor_Age_in_Years
@@ -587,7 +553,13 @@ GO
 -- 12.d: Create a view to display all the movies, ratings, actors along with director information.
 CREATE VIEW mov.vw_MovieCompleteInfo
 AS
-SELECT m.*
+SELECT m.Movie_ID
+     , m.Movie_Name
+     , m.Movie_Released_Year
+     , m.Movie_Lead_Studio
+     , m.Movie_Language
+     , m.Movie_Type
+     , m.Movie_Category
      , r.Rating_Audience_Score
      , r.Rating_Rotten_Tomatoes
      , a.Actor_First_Name
@@ -619,6 +591,7 @@ FROM mov.Movies             m
         ON m.Director_ID = d.Director_ID;
 GO
 
+
 -- 13.a: Retrieve the list of all Databases.
 SELECT name
 FROM sys.databases;
@@ -649,7 +622,7 @@ ORDER BY TotalSpaceKB DESC;
 
 -- 13.c: List of tables with the number of records.
 SELECT t.NAME AS TableName
-     , p.rows AS RowCounts
+     , p.rows AS numberOfRecords
 FROM sys.tables               t
     INNER JOIN sys.indexes    i
         ON t.OBJECT_ID = i.object_id
@@ -660,23 +633,44 @@ WHERE i.index_id <= 1
 ORDER BY p.rows DESC;
 
 -- 13.d: List of Primary Key and Foreign Key for the Whole Database.
-SELECT OBJECT_NAME(f.parent_object_id)                            AS TableName
-     , COL_NAME(fc.parent_object_id, fc.parent_column_id)         AS ColumnName
-     , OBJECT_NAME(f.referenced_object_id)                        AS ReferenceTableName
-     , COL_NAME(fc.referenced_object_id, fc.referenced_column_id) AS ReferenceColumnName
-FROM sys.foreign_keys                  AS f
-    INNER JOIN sys.foreign_key_columns AS fc
-        ON f.object_id = fc.constraint_object_id;
-
--- 13.e: Get all Nullable columns of a table.
-SELECT t.NAME AS TableName
-     , c.NAME AS ColumnName
-FROM sys.tables            t
-    INNER JOIN sys.columns c
-        ON t.OBJECT_ID = c.OBJECT_ID
-WHERE c.is_nullable = 1
-ORDER BY t.NAME
-       , c.NAME;
+SELECT t.name             AS TableName
+     , pkcols.PrimaryKeys AS PrimaryKey
+     , fkcols.ForeignKeys AS ForeignKey
+FROM sys.tables t
+    INNER JOIN
+    (
+        SELECT t.name                                                AS TableName
+             , STRING_AGG(c.name, ', ')WITHIN GROUP(ORDER BY c.name) AS PrimaryKeys
+        FROM sys.tables                    t
+            INNER JOIN sys.key_constraints kc
+                ON t.object_id = kc.parent_object_id
+            INNER JOIN sys.index_columns   ic
+                ON kc.parent_object_id = ic.object_id
+                   AND kc.unique_index_id = ic.index_id
+            INNER JOIN sys.columns         c
+                ON ic.object_id = c.object_id
+                   AND ic.column_id = c.column_id
+        WHERE kc.type = 'PK'
+        GROUP BY t.name
+    )           pkcols
+        ON t.name = pkcols.TableName
+    INNER JOIN
+    (
+        SELECT t.name                                                AS TableName
+             , STRING_AGG(c.name, ', ')WITHIN GROUP(ORDER BY c.name) AS ForeignKeys
+        FROM sys.tables                        t
+            INNER JOIN sys.foreign_keys        fk
+                ON t.object_id = fk.parent_object_id
+            INNER JOIN sys.foreign_key_columns fkc
+                ON fk.object_id = fkc.constraint_object_id
+            INNER JOIN sys.columns             c
+                ON fkc.parent_object_id = c.object_id
+                   AND fkc.parent_column_id = c.column_id
+        GROUP BY t.name
+    )           fkcols
+        ON t.name = fkcols.TableName
+WHERE t.is_ms_shipped = 0
+ORDER BY t.name;
 
 
 -- 13.f: Get All tables that do not have a primary key.
